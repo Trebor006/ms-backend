@@ -1,0 +1,85 @@
+{
+	"info": {
+		"_postman_id": "d65c17fe-66c8-434b-ab75-6a4f51393a7e",
+		"name": "coinmarketCollection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "354982"
+	},
+	"item": [
+		{
+			"name": "localhost:8080/conversions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							"pm.environment.set(\"dataValue\", pm.response.json().data);\r",
+							"\r",
+							"console.log(pm.environment.get(\"dataValue\"));\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"symbol\": \"BTC\",\r\n  \"amount\": 2.3,\r\n  \"currency\": \"USD\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/conversions",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"conversions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/conversions/{{dataValue}}",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"symbol\": \"BTC\",\r\n  \"amount\": 1.0,\r\n  \"currency\": \"USD\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/conversions/{{dataValue}}",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"conversions",
+						"{{dataValue}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
