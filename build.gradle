@@ -24,17 +24,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-//    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
-//    implementation 'org.mongodb:mongodb-driver-reactivestreams:4.9.0'
-
-
-//    implementation 'com.h2database:h2'
-////    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-//    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
-
-//    implementation 'org.springframework.data:spring-data-mongodb:3.2.12'
-//    implementation 'org.mongodb:mongodb-driver-sync:4.4.3'
-
 
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation 'com.google.code.gson:gson'
@@ -42,6 +31,10 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+bootJar {
+    enabled = true
 }
 
 tasks.named('test') {
