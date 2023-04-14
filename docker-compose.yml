@@ -1,0 +1,70 @@
+version: '3.1'
+
+services:
+  activemq-artemis:
+    container_name: activemq-artemis
+    image: vromero/activemq-artemis
+    ports:
+      - "8161:8161"
+      - "61616:61616"
+      - "5672:5672"
+    environment:
+      - ARTEMIS_USERNAME=myuser
+      - ARTEMIS_PASSWORD=mypassword
+    networks:
+      - docker_network
+
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    container_name: mongodb
+    restart: always
+    networks:
+      - docker_network
+
+  postgresdb:
+    container_name: postgresdb
+    image: postgres:13.5
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: coinmarket
+    volumes:
+      - coinmarket-pgsql-data:/var/lib/postgresql/data
+    networks:
+      - docker_network
+
+  ms-integration:
+    container_name: ms-integration
+    image: trebor006/ms-integration:latest
+    restart: always
+    ports:
+      - '8081:8081'
+    networks:
+      - docker_network
+    depends_on:
+      - postgresdb
+      - activemq-artemis
+
+  ms-backend:
+    container_name: ms-backend
+    image: trebor006/ms-backend:latest
+    restart: always
+    ports:
+      - '8080:8080'
+    networks:
+      - docker_network
+    depends_on:
+      - activemq-artemis
+      - mongodb
+      - ms-integration
+
+networks:
+  docker_network:
+    driver: bridge
+
+volumes:
+  coinmarket-pgsql-data:
