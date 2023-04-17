@@ -4,6 +4,7 @@ import static org.mockito.Mockito.when;
 
 import com.google.gson.Gson;
 import com.java.test.msbackend.components.artemis.ProducerInterface;
+import com.java.test.msbackend.components.messages.MessageServiceInterface;
 import com.java.test.msbackend.documents.ConversionRequest;
 import com.java.test.msbackend.dto.ConversionRequestDto;
 import com.java.test.msbackend.dto.ConversionResponseDto;
@@ -23,6 +24,7 @@ public class ConversionServiceTest {
   @Mock private ProducerInterface artemisProducer;
   @Mock private ConversionRequestMessageMapperServiceInterface mapperService;
   @Mock private ConversionRequestServiceInterface conversionRequestService;
+  @Mock private MessageServiceInterface messageService;;
   @InjectMocks private ConversionService conversionService;
 
   @Test
@@ -40,6 +42,8 @@ public class ConversionServiceTest {
             .amount(conversionRequestDto.getAmount())
             .currency(conversionRequestDto.getCurrency())
             .build();
+
+    when(messageService.getMessage(Mockito.anyString())).thenReturn("");
 
     conversionRequestService.createConversionRequest(Mockito.anyString());
     Mockito.verify(conversionRequestService, Mockito.times(1))
