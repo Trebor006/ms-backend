@@ -26,7 +26,7 @@ public class ConversionServiceTest {
   @InjectMocks private ConversionService conversionService;
 
   @Test
-  void testGenerateConversionRequest() {
+  public void testGenerateConversionRequest() {
     var symbol = "BTC";
     var amount = 1.0D;
     var currency = "USD";

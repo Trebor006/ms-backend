@@ -1,6 +1,7 @@
 package com.java.test.msbackend.services.processor;
 
 import com.google.gson.Gson;
+import com.java.test.msbackend.components.messages.MessageServiceInterface;
 import com.java.test.msbackend.dto.integration.ResultDto;
 import com.java.test.msbackend.services.ConversionRequestServiceInterface;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class ConversionResponseProcessor implements Processor {
 
   private final ConversionRequestServiceInterface conversionRequestService;
+  private final MessageServiceInterface messageService;
 
   @Override
   public void process(String content) {
@@ -20,6 +22,6 @@ public class ConversionResponseProcessor implements Processor {
     var resultDto = gson.fromJson(content, ResultDto.class);
     log.info(content);
     conversionRequestService.updateConversionRequest(resultDto.getRequestId(), content);
-    log.info("saving update in mongodb");
+    log.info(messageService.getMessage("process.mongo.service.updating"));
   }
 }

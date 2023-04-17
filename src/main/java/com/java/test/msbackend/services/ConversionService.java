@@ -2,6 +2,7 @@ package com.java.test.msbackend.services;
 
 import com.google.gson.Gson;
 import com.java.test.msbackend.components.artemis.ProducerInterface;
+import com.java.test.msbackend.components.messages.MessageServiceInterface;
 import com.java.test.msbackend.documents.ConversionRequest;
 import com.java.test.msbackend.dto.ConversionResponseDto;
 import com.java.test.msbackend.dto.integration.RequestDto;
@@ -19,18 +20,21 @@ public class ConversionService implements ConversionServiceInterface {
   private final ProducerInterface artemisProducer;
   private final ConversionRequestMessageMapperServiceInterface mapperService;
   private final ConversionRequestServiceInterface conversionRequestService;
+  private final MessageServiceInterface messageService;
 
   @Override
   public String generateConversionRequest(RequestDto conversionRequestDto) {
     String requestString = new Gson().toJson(conversionRequestDto);
-    log.info("generating conversion request :: " + requestString);
+    log.info(
+        messageService.getMessage(
+            "process.generating.conversion.request", new String[] {requestString}));
 
     conversionRequestService.createConversionRequest(conversionRequestDto.getRequestId());
 
     var queueMessage = mapperService.mapToQueueMessage(conversionRequestDto);
     artemisProducer.sendMessage(queueMessage);
 
-    log.info("generateConversionRequest finished... ");
+    log.info(messageService.getMessage("process.generating.conversion.request.finished"));
 
     return conversionRequestDto.getRequestId();
   }
@@ -39,9 +43,10 @@ public class ConversionService implements ConversionServiceInterface {
   public ConversionResponseDto getConversionData(String requestId) {
     ConversionRequest conversionRequest = conversionRequestService.getData(requestId);
     if (conversionRequest == null) {
-      log.info("conversion not found");
-      throw new ConversionRequestNotFoundException(
-          "conversion not found with requestId: " + requestId);
+      var message =
+          messageService.getMessage("conversion.data.not.found", new String[] {requestId});
+      log.info(message);
+      throw new ConversionRequestNotFoundException(message);
     }
 
     return new Gson().fromJson(conversionRequest.getRequestDetail(), ConversionResponseDto.class);

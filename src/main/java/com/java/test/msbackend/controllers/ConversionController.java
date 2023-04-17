@@ -1,6 +1,7 @@
 package com.java.test.msbackend.controllers;
 
 import com.google.gson.Gson;
+import com.java.test.msbackend.components.messages.MessageServiceInterface;
 import com.java.test.msbackend.components.response.ApiResponse;
 import com.java.test.msbackend.components.response.SuccessApiResponseServiceInterface;
 import com.java.test.msbackend.dto.ConversionRequestDto;
@@ -20,12 +21,15 @@ public class ConversionController implements ConversionControllerInterface {
 
   private final ConversionServiceInterface conversionService;
   private final SuccessApiResponseServiceInterface successApiResponseService;
+  private final MessageServiceInterface messageService;
 
   @Override
   @PostMapping
   public ResponseEntity<ApiResponse> convert(
-          @RequestBody ConversionRequestDto conversionRequestDto) {
-    log.info("convert init - " + new Gson().toJson(conversionRequestDto));
+      @RequestBody ConversionRequestDto conversionRequestDto) {
+    log.info(
+        messageService.getMessage(
+            "conversion.init.message", new String[] {new Gson().toJson(conversionRequestDto)}));
     var requestDto =
         RequestDto.builder()
             .symbol(conversionRequestDto.getSymbol())
